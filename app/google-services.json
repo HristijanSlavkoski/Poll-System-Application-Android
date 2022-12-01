@@ -2,6 +2,7 @@
   "project_info": {
     "project_number": "135893761316",
     "project_id": "poll-system-application",
+    "firebase_url": "https://poll-system-application-default-rtdb.europe-west1.firebasedatabase.app",
     "storage_bucket": "poll-system-application.appspot.com"
   },
   "client": [
