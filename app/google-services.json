@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "135893761316",
+    "project_id": "poll-system-application",
+    "storage_bucket": "poll-system-application.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:135893761316:android:0b0075ab26c8276c3e47b1",
+        "android_client_info": {
+          "package_name": "com.example.pollsystemapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "135893761316-9om2uaj9p26qpfpvug15a3vp74ocdrie.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbU00jqezMI1OJYak5iveOHBlRD7fynwk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "135893761316-9om2uaj9p26qpfpvug15a3vp74ocdrie.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
