@@ -25,7 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
-    TextView createNewAccount;
+    TextView createNewAccount, forgotPassword;
     EditText inputEmail, inputPassword;
     Button buttonLogin;
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         inputEmail = findViewById(R.id.inputEmail);
         inputPassword = findViewById(R.id.inputPassword);
         buttonLogin = findViewById(R.id.buttonLogin);
+        forgotPassword = findViewById(R.id.forgotPassword);
         progressDialog = new ProgressDialog(this);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -62,6 +63,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 ValidateLogin();
+            }
+        });
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                forgotPassword();
             }
         });
     }
@@ -128,5 +135,31 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "" + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void forgotPassword() {
+        String email = inputEmail.getText().toString();
+        if (!email.matches(emailPattern)) {
+            inputEmail.setError("Enter correct Email");
+        } else {
+            progressDialog.setMessage("Please wait while we confirm the email");
+            progressDialog.setTitle("Login");
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.show();
+
+            Task<Void> forgot_password = firebaseAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        progressDialog.dismiss();
+                        sendUserToNextActivity();
+                        Toast.makeText(MainActivity.this, "Password reset link was sent to your email.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        progressDialog.dismiss();
+                        Toast.makeText(MainActivity.this, "" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
     }
 }
