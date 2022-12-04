@@ -91,6 +91,11 @@ public class RegisterActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                         firebaseUser = firebaseAuth.getCurrentUser();
                         User user = new User("voter", email);
+                        //The entry title of each user is the UID from Authentication database
+                        //Instead of storing 1 more value for UID (something like foreign key)
+                        //And generate new UID for title
+                        //Like this: databaseReference.child("user").push(user)
+                        //We have the 'foreign key' as a title of the entry
                         databaseReference.child("user").child(firebaseUser.getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {

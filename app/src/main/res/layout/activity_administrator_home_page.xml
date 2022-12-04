@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#C6EFEB"
     tools:context=".AdministratorHomePage">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="336dp"
-        android:layout_height="298dp"
-        android:text="Admin"
-        android:textSize="50dp"
+    <Button
+        android:id="@+id/buttonCreateNewPoll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create new poll"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
