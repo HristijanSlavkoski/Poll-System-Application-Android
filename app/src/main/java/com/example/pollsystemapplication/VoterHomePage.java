@@ -33,7 +33,7 @@ public class VoterHomePage extends AppCompatActivity {
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
-        mRecyclerView = (RecyclerView) findViewById(R.id.list);
+        mRecyclerView = findViewById(R.id.list);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -42,7 +42,7 @@ public class VoterHomePage extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    values.add((User) dataSnapshot.getValue(User.class));
+                    values.add(dataSnapshot.getValue(User.class));
                 }
                 pollAdapter = new PollAdapter(values, R.layout.poll_row, VoterHomePage.this);
                 mRecyclerView.setAdapter(pollAdapter);

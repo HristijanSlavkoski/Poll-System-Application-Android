@@ -32,6 +32,7 @@
                     android:layout_marginEnd="9dp"
                     android:layout_toStartOf="@+id/addAnswers"
                     android:layout_weight="4"
+                    android:drawableLeft="@drawable/ic_baseline_square_24"
                     android:elegantTextHeight="true"
                     android:text="Question"
                     android:textAlignment="center"
@@ -63,15 +64,14 @@
                     android:layout_marginStart="0dp"
                     android:layout_marginTop="70dp"
                     android:layout_marginEnd="0dp"
-                    android:layout_marginBottom="70dp"
+                    android:layout_marginBottom="0dp"
                     android:scrollbars="none">
 
                     <LinearLayout
                         android:id="@+id/answerLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                    </LinearLayout>
+                        android:orientation="vertical"></LinearLayout>
                 </ScrollView>
 
             </RelativeLayout>
