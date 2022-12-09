@@ -1,21 +1,24 @@
 package com.example.pollsystemapplication;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Poll {
     String title;
-    String creatorId;
+    String creator;
     ArrayList<Question> questions;
-    Boolean active;
+    LocalDateTime start;
+    LocalDateTime end;
 
     public Poll() {
     }
 
-    public Poll(String title, String creatorId, ArrayList<Question> questions, Boolean active) {
+    public Poll(String title, String creator, ArrayList<Question> questions, LocalDateTime start, LocalDateTime end) {
         this.title = title;
-        this.creatorId = creatorId;
+        this.creator = creator;
         this.questions = questions;
-        this.active = active;
+        this.start = start;
+        this.end = end;
     }
 
     public String getTitle() {
@@ -26,12 +29,12 @@ public class Poll {
         this.title = title;
     }
 
-    public String getCreatorId() {
-        return creatorId;
+    public String getCreator() {
+        return creator;
     }
 
-    public void setCreatorId(String creatorId) {
-        this.creatorId = creatorId;
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
     public ArrayList<Question> getQuestions() {
@@ -42,12 +45,20 @@ public class Poll {
         this.questions = questions;
     }
 
-    public Boolean getActive() {
-        return active;
+    public LocalDateTime getStart() {
+        return start;
     }
 
-    public void setActive(Boolean active) {
-        this.active = active;
+    public void setStart(LocalDateTime start) {
+        this.start = start;
+    }
+
+    public LocalDateTime getEnd() {
+        return end;
+    }
+
+    public void setEnd(LocalDateTime end) {
+        this.end = end;
     }
 }
 

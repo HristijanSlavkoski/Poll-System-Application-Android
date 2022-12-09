@@ -1,18 +1,24 @@
 package com.example.pollsystemapplication;
 
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,11 +29,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class CreateNewPollActivity extends AppCompatActivity {
 
-    Button addQuestionButton, finishCreatingPoll;
+    Button addQuestionButton, finishCreatingPoll, setStartDate, setStartTime, setEndDate, setEndTime;
     AlertDialog dialogForQuestion, dialogForAnswer;
     LinearLayout QuestionContainer;
     EditText pollTitleText;
@@ -36,6 +45,7 @@ public class CreateNewPollActivity extends AppCompatActivity {
     FirebaseUser firebaseUser;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
+    String startDate, startTime, endDate, endTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +54,10 @@ public class CreateNewPollActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         addQuestionButton = findViewById(R.id.addQuestion);
+        setStartDate = findViewById(R.id.setStartDate);
+        setStartTime = findViewById(R.id.setStartTime);
+        setEndDate = findViewById(R.id.setEndDate);
+        setEndTime = findViewById(R.id.setEndTime);
         finishCreatingPoll = findViewById(R.id.finishCreatingPoll);
         QuestionContainer = findViewById(R.id.questionContainer);
         pollTitleText = findViewById(R.id.pollTitleText);
@@ -61,7 +75,36 @@ public class CreateNewPollActivity extends AppCompatActivity {
             }
         });
 
+        setStartDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setStartDate();
+            }
+        });
+
+        setStartTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setStartTime();
+            }
+        });
+
+        setEndDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setEndDate();
+            }
+        });
+
+        setEndTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setEndTime();
+            }
+        });
+
         finishCreatingPoll.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
                 progressDialog.setMessage("Please wait while we add the new poll");
@@ -69,6 +112,24 @@ public class CreateNewPollActivity extends AppCompatActivity {
                 progressDialog.setCanceledOnTouchOutside(false);
                 progressDialog.show();
                 try {
+                    if (startDate == null) {
+                        throw new Exception("Please set start date");
+                    }
+                    if (startTime == null) {
+                        throw new Exception("Please set start time");
+                    }
+                    if (endDate == null) {
+                        throw new Exception("Please set end date");
+                    }
+                    if (endTime == null) {
+                        throw new Exception("Please set end time");
+                    }
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d-M-yyyy H:m");
+                    LocalDateTime start = LocalDateTime.parse(startDate + " " + startTime, formatter);
+                    LocalDateTime end = LocalDateTime.parse(endDate + " " + endTime, formatter);
+                    if (start.isAfter(end)) {
+                        throw new Exception("Start time of the poll cannot be after end time");
+                    }
                     ArrayList<Question> questions = new ArrayList<>();
                     final int numberOfQuestions = QuestionContainer.getChildCount();
                     if (numberOfQuestions == 0) {
@@ -89,8 +150,11 @@ public class CreateNewPollActivity extends AppCompatActivity {
                         }
                         questions.add(new Question(questionName.getText().toString(), answers));
                     }
+                    if (pollTitleText.getText().toString() == null || pollTitleText.getText().toString().equals("")) {
+                        throw new Exception("Please add title of the poll");
+                    }
                     //On create, all polls will be inactive, we can activate them later
-                    Poll poll = new Poll(pollTitleText.getText().toString(), firebaseUser.getEmail(), questions, false);
+                    Poll poll = new Poll(pollTitleText.getText().toString(), firebaseUser.getEmail(), questions, start, end);
                     databaseReference.child("poll").push().setValue(poll).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
@@ -112,6 +176,70 @@ public class CreateNewPollActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void setStartDate() {
+        Calendar calendar = Calendar.getInstance();
+        int startYear = calendar.get(Calendar.YEAR);
+        int startMonth = calendar.get(Calendar.MONTH);
+        int startDay = calendar.get(Calendar.DAY_OF_MONTH);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                startDate = i2 + "-" + i1 + "-" + i;
+                setStartDate.setText(startDate);
+            }
+        }, startYear, startMonth, startDay);
+
+        datePickerDialog.show();
+    }
+
+    private void setStartTime() {
+        Calendar calendar = Calendar.getInstance();
+        int startHour = calendar.get(Calendar.HOUR);
+        int startMinute = calendar.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int i, int i1) {
+                startTime = i + ":" + i1;
+                setStartTime.setText(startTime);
+            }
+        }, startHour, startMinute, true);
+
+        timePickerDialog.show();
+    }
+
+    private void setEndDate() {
+        Calendar calendar = Calendar.getInstance();
+        int startYear = calendar.get(Calendar.YEAR);
+        int startMonth = calendar.get(Calendar.MONTH);
+        int startDay = calendar.get(Calendar.DAY_OF_MONTH);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                endDate = i2 + "-" + i1 + "-" + i;
+                setEndDate.setText(endDate);
+            }
+        }, startYear, startMonth, startDay);
+
+        datePickerDialog.show();
+    }
+
+    private void setEndTime() {
+        Calendar calendar = Calendar.getInstance();
+        int startHour = calendar.get(Calendar.HOUR);
+        int startMinute = calendar.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int i, int i1) {
+                endTime = i + ":" + i1;
+                setEndTime.setText(endTime);
+            }
+        }, startHour, startMinute, true);
+
+        timePickerDialog.show();
     }
 
     private void buildDialogForQuestion() {

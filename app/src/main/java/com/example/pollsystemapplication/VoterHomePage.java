@@ -17,7 +17,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Semaphore;
 
 public class VoterHomePage extends AppCompatActivity {
 
@@ -37,14 +36,14 @@ public class VoterHomePage extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        List<User> values = new ArrayList<User>();
-        databaseReference.child("user").addListenerForSingleValueEvent(new ValueEventListener() {
+        List<Poll> values = new ArrayList<Poll>();
+        databaseReference.child("poll").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    values.add(dataSnapshot.getValue(User.class));
+                    values.add(dataSnapshot.getValue(Poll.class));
                 }
-                pollAdapter = new PollAdapter(values, R.layout.poll_row, VoterHomePage.this);
+                pollAdapter = new PollAdapter(values, R.layout.list_all_active_polls, VoterHomePage.this);
                 mRecyclerView.setAdapter(pollAdapter);
             }
 
@@ -53,43 +52,5 @@ public class VoterHomePage extends AppCompatActivity {
                 Toast.makeText(VoterHomePage.this, "" + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private List<User> getUsers() throws InterruptedException {
-        //We can't make listeners to work synchronous, so we
-        //change the logic of the project
-        List<User> users = new ArrayList<User>();
-        Semaphore semaphore = new Semaphore(0);
-        databaseReference.child("user").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    users.add((User) dataSnapshot.getValue(User.class));
-                }
-                semaphore.release(0);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(VoterHomePage.this, "" + error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-        /*databaseReference.child("user").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Toast.makeText(VoterHomePage.this, "" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                } else {
-                    for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
-                        users.add((User) dataSnapshot.getValue(User.class));
-                    }
-                    semaphore.release();
-                }
-            }
-        });*/
-        semaphore.acquire(0);
-        return users;
     }
 }
