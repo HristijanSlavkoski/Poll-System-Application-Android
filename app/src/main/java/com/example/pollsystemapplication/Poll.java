@@ -1,15 +1,17 @@
 package com.example.pollsystemapplication;
 
+import java.util.ArrayList;
+
 public class Poll {
     String title;
     String creatorId;
-    Question[] questions;
+    ArrayList<Question> questions;
     Boolean active;
 
     public Poll() {
     }
 
-    public Poll(String title, String creatorId, Question[] questions, Boolean active) {
+    public Poll(String title, String creatorId, ArrayList<Question> questions, Boolean active) {
         this.title = title;
         this.creatorId = creatorId;
         this.questions = questions;
@@ -32,11 +34,11 @@ public class Poll {
         this.creatorId = creatorId;
     }
 
-    public Question[] getQuestions() {
+    public ArrayList<Question> getQuestions() {
         return questions;
     }
 
-    public void setQuestions(Question[] questions) {
+    public void setQuestions(ArrayList<Question> questions) {
         this.questions = questions;
     }
 

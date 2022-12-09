@@ -1,13 +1,15 @@
 package com.example.pollsystemapplication;
 
+import java.util.ArrayList;
+
 public class Question {
     String question;
-    String[] options;
+    ArrayList<String> options;
 
     public Question() {
     }
 
-    public Question(String question, String[] options) {
+    public Question(String question, ArrayList<String> options) {
         this.question = question;
         this.options = options;
     }
@@ -20,11 +22,11 @@ public class Question {
         this.question = question;
     }
 
-    public String[] getOptions() {
+    public ArrayList<String> getOptions() {
         return options;
     }
 
-    public void setOptions(String[] options) {
+    public void setOptions(ArrayList<String> options) {
         this.options = options;
     }
 }
