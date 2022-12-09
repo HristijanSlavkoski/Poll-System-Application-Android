@@ -13,6 +13,13 @@
         android:theme="@style/Theme.PollSystemApplication"
         tools:targetApi="31">
         <activity
+            android:name=".CreateNewPollActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".AdministratorHomePage"
             android:exported="false">
             <meta-data
