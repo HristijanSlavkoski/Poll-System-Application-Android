@@ -37,7 +37,7 @@ public class CreateNewPollActivity extends AppCompatActivity {
 
     Button addQuestionButton, finishCreatingPoll, setStartDate, setStartTime, setEndDate, setEndTime;
     AlertDialog dialogForQuestion, dialogForAnswer;
-    LinearLayout QuestionContainer;
+    LinearLayout questionContainer;
     EditText pollTitleText;
     ProgressDialog progressDialog;
     FirebaseAuth firebaseAuth;
@@ -59,7 +59,7 @@ public class CreateNewPollActivity extends AppCompatActivity {
         setEndDate = findViewById(R.id.setEndDate);
         setEndTime = findViewById(R.id.setEndTime);
         finishCreatingPoll = findViewById(R.id.finishCreatingPoll);
-        QuestionContainer = findViewById(R.id.questionContainer);
+        questionContainer = findViewById(R.id.questionContainer);
         pollTitleText = findViewById(R.id.pollTitleText);
         progressDialog = new ProgressDialog(this);
         firebaseAuth = FirebaseAuth.getInstance();
@@ -137,12 +137,12 @@ public class CreateNewPollActivity extends AppCompatActivity {
                         throw new Exception("Start time of the poll cannot be after end time");
                     }
                     ArrayList<Question> questions = new ArrayList<>();
-                    final int numberOfQuestions = QuestionContainer.getChildCount();
+                    final int numberOfQuestions = questionContainer.getChildCount();
                     if (numberOfQuestions == 0) {
                         throw new Exception("Please add at least one question");
                     }
                     for (int i = 0; i < numberOfQuestions; i++) {
-                        View questionView = QuestionContainer.getChildAt(i);
+                        View questionView = questionContainer.getChildAt(i);
                         TextView questionName = questionView.findViewById(R.id.question);
                         LinearLayout answerLayout = questionView.findViewById(R.id.answerLayout);
                         ArrayList<String> answers = new ArrayList<>();
@@ -170,7 +170,7 @@ public class CreateNewPollActivity extends AppCompatActivity {
                                 Intent intent = new Intent(CreateNewPollActivity.this, AdministratorHomePage.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
-                                Toast.makeText(CreateNewPollActivity.this, "New poll created successfuly", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(CreateNewPollActivity.this, "New poll created successfully", Toast.LENGTH_SHORT).show();
                             } else {
                                 progressDialog.dismiss();
                                 Toast.makeText(CreateNewPollActivity.this, "" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -288,8 +288,8 @@ public class CreateNewPollActivity extends AppCompatActivity {
         deleteQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                QuestionContainer.removeView(view);
-                QuestionContainer.forceLayout();
+                questionContainer.removeView(view);
+                questionContainer.forceLayout();
             }
         });
         addAnswers.setOnClickListener(new View.OnClickListener() {
@@ -299,7 +299,7 @@ public class CreateNewPollActivity extends AppCompatActivity {
                 dialogForAnswer.show();
             }
         });
-        QuestionContainer.addView(view);
+        questionContainer.addView(view);
     }
 
     private void buildDialogForAnswer(LinearLayout answerContainer) {

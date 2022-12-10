@@ -1,8 +1,9 @@
 package com.example.pollsystemapplication;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Question {
+public class Question implements Serializable {
     String question;
     ArrayList<String> options;
 

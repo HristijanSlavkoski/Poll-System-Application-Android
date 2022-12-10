@@ -1,9 +1,10 @@
 package com.example.pollsystemapplication;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Poll {
+public class Poll implements Serializable {
     String title;
     String creator;
     ArrayList<Question> questions;

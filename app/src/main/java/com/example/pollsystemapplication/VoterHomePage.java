@@ -37,13 +37,15 @@ public class VoterHomePage extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         List<Poll> values = new ArrayList<Poll>();
+        List<String> keys = new ArrayList<>();
         databaseReference.child("poll").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     values.add(dataSnapshot.getValue(Poll.class));
+                    keys.add(dataSnapshot.getKey());
                 }
-                pollAdapter = new PollAdapter(values, R.layout.list_all_active_polls, VoterHomePage.this);
+                pollAdapter = new PollAdapter(keys, values, R.layout.list_all_active_polls, VoterHomePage.this);
                 mRecyclerView.setAdapter(pollAdapter);
             }
 
