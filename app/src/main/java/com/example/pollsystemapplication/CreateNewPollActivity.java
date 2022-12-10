@@ -130,10 +130,6 @@ public class CreateNewPollActivity extends AppCompatActivity {
                     }
                     Date start;
                     Date end;
-                    //SimpleDateFormat format = new SimpleDateFormat("d-M-yyyy h:m");
-
-                    //start = format.parse(startDate + " " + startTime);
-                    //end = format.parse(endDate + " " + endTime);
                     start = startCalendar.getTime();
                     end = endCalendar.getTime();
 
