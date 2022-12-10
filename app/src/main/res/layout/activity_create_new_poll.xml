@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
+    android:background="#C6EFEB"
     tools:context=".CreateNewPollActivity">
 
     <EditText
@@ -86,9 +87,18 @@
             android:layout_marginBottom="10dp">
 
             <Button
+                android:id="@+id/goBack"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_weight="1"
+                android:text="Cancel creating poll"></Button>
+
+            <Button
                 android:id="@+id/addQuestion"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_height="match_parent"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_weight="1"
@@ -97,7 +107,7 @@
             <Button
                 android:id="@+id/finishCreatingPoll"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_height="match_parent"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_weight="1"

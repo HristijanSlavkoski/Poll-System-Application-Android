@@ -35,7 +35,7 @@ import java.util.Date;
 
 public class CreateNewPollActivity extends AppCompatActivity {
 
-    Button addQuestionButton, finishCreatingPoll, setStartDate, setStartTime, setEndDate, setEndTime;
+    Button addQuestionButton, finishCreatingPoll, setStartDate, setStartTime, setEndDate, setEndTime, goBack;
     AlertDialog dialogForQuestion, dialogForAnswer;
     LinearLayout questionContainer;
     EditText pollTitleText;
@@ -58,6 +58,7 @@ public class CreateNewPollActivity extends AppCompatActivity {
         setStartTime = findViewById(R.id.setStartTime);
         setEndDate = findViewById(R.id.setEndDate);
         setEndTime = findViewById(R.id.setEndTime);
+        goBack = findViewById(R.id.goBack);
         finishCreatingPoll = findViewById(R.id.finishCreatingPoll);
         questionContainer = findViewById(R.id.questionContainer);
         pollTitleText = findViewById(R.id.pollTitleText);
@@ -104,6 +105,15 @@ public class CreateNewPollActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 setEndTime();
+            }
+        });
+
+        goBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CreateNewPollActivity.this, AdministratorHomePage.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
         });
 

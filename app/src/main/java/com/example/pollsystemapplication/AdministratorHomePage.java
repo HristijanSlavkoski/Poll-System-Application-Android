@@ -15,7 +15,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class AdministratorHomePage extends AppCompatActivity {
 
-    Button buttonCreateNewPoll;
+    Button buttonCreateNewPoll, logoutButton;
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
     FirebaseDatabase firebaseDatabase;
@@ -28,6 +28,7 @@ public class AdministratorHomePage extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         buttonCreateNewPoll = findViewById(R.id.buttonCreateNewPoll);
+        logoutButton = findViewById(R.id.logoutButton);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -37,6 +38,14 @@ public class AdministratorHomePage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(AdministratorHomePage.this, CreateNewPollActivity.class));
+            }
+        });
+
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firebaseAuth.signOut();
+                startActivity(new Intent(AdministratorHomePage.this, MainActivity.class));
             }
         });
     }
