@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class PollAdapter extends RecyclerView.Adapter<PollAdapter.ViewHolder> {
@@ -33,6 +35,19 @@ public class PollAdapter extends RecyclerView.Adapter<PollAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         Poll entry = myList.get(i);
         viewHolder.questionTitle.setText(entry.getTitle());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        viewHolder.start.setText("From: " + simpleDateFormat.format(entry.getStart()));
+        viewHolder.end.setText(" To:  " + simpleDateFormat.format(entry.getEnd()));
+        Date startDate = entry.getStart();
+        Date endDate = entry.getEnd();
+        if (startDate.after(new Date())) {
+            viewHolder.voteButton.setText("Coming soon");
+            viewHolder.voteButton.setEnabled(false);
+        } else if (endDate.before(new Date())) {
+            viewHolder.voteButton.setText("Results");
+        } else {
+            viewHolder.voteButton.setText("Vote");
+        }
         viewHolder.questionTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,15 +66,15 @@ public class PollAdapter extends RecyclerView.Adapter<PollAdapter.ViewHolder> {
 
         public TextView questionTitle;
         public Button voteButton;
-        //public TextView start;
-        //public TextView end;
+        public TextView start;
+        public TextView end;
 
         public ViewHolder(View itemView) {
             super(itemView);
             questionTitle = (TextView) itemView.findViewById(R.id.questionTitle);
             voteButton = (Button) itemView.findViewById(R.id.voteButton);
-            //start = (TextView) itemView.findViewById(R.id.start);
-            //end = (TextView) itemView.findViewById(R.id.end);
+            start = (TextView) itemView.findViewById(R.id.start);
+            end = (TextView) itemView.findViewById(R.id.end);
         }
     }
 }

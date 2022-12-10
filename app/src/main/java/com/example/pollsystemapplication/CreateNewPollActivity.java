@@ -29,8 +29,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -47,6 +45,7 @@ public class CreateNewPollActivity extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     String startDate, startTime, endDate, endTime;
+    Calendar startCalendar, endCalendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +66,10 @@ public class CreateNewPollActivity extends AppCompatActivity {
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
+        startCalendar = Calendar.getInstance();
+        endCalendar = Calendar.getInstance();
+        setStartTime.setEnabled(false);
+        setEndTime.setEnabled(false);
 
         buildDialogForQuestion();
         addQuestionButton.setOnClickListener(new View.OnClickListener() {
@@ -127,13 +130,13 @@ public class CreateNewPollActivity extends AppCompatActivity {
                     }
                     Date start;
                     Date end;
-                    SimpleDateFormat format = new SimpleDateFormat("d-M-yyyy h:m");
-                    try {
-                        start = format.parse(startDate + " " + startTime);
-                        end = format.parse(endDate + " " + endTime);
-                    } catch (ParseException e) {
-                        throw new Exception(e.getMessage());
-                    }
+                    //SimpleDateFormat format = new SimpleDateFormat("d-M-yyyy h:m");
+
+                    //start = format.parse(startDate + " " + startTime);
+                    //end = format.parse(endDate + " " + endTime);
+                    start = startCalendar.getTime();
+                    end = endCalendar.getTime();
+
                     if (start.after(end)) {
                         throw new Exception("Start time of the poll cannot be after end time");
                     }
@@ -152,7 +155,8 @@ public class CreateNewPollActivity extends AppCompatActivity {
                             throw new Exception("Please add at least one choice to each question");
                         }
                         for (int j = 0; j < numberOfAnswers; j++) {
-                            TextView answerName = answerLayout.findViewById(R.id.answer);
+                            View answerView = answerLayout.getChildAt(j);
+                            TextView answerName = answerView.findViewById(R.id.answer);
                             answers.add(answerName.getText().toString());
                         }
                         questions.add(new Question(questionName.getText().toString(), answers));
@@ -193,7 +197,9 @@ public class CreateNewPollActivity extends AppCompatActivity {
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                startDate = i2 + "-" + i1 + "-" + i;
+                startDate = i2 + "-" + (i1 + 1) + "-" + i;
+                startCalendar.set(i, i1, i2);
+                setStartTime.setEnabled(true);
                 setStartDate.setText(startDate);
             }
         }, startYear, startMonth, startDay);
@@ -211,6 +217,7 @@ public class CreateNewPollActivity extends AppCompatActivity {
             public void onTimeSet(TimePicker timePicker, int i, int i1) {
                 startTime = i + ":" + i1;
                 setStartTime.setText(startTime);
+                startCalendar.set(startCalendar.get(Calendar.YEAR), startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.DAY_OF_MONTH), i, i1);
             }
         }, startHour, startMinute, true);
 
@@ -225,8 +232,10 @@ public class CreateNewPollActivity extends AppCompatActivity {
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                endDate = i2 + "-" + i1 + "-" + i;
+                endDate = i2 + "-" + (i1 + 1) + "-" + i;
                 setEndDate.setText(endDate);
+                endCalendar.set(i, i1, i2);
+                setEndTime.setEnabled(true);
             }
         }, startYear, startMonth, startDay);
 
@@ -243,6 +252,7 @@ public class CreateNewPollActivity extends AppCompatActivity {
             public void onTimeSet(TimePicker timePicker, int i, int i1) {
                 endTime = i + ":" + i1;
                 setEndTime.setText(endTime);
+                endCalendar.set(startCalendar.get(Calendar.YEAR), startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.DAY_OF_MONTH), i, i1);
             }
         }, startHour, startMinute, true);
 
