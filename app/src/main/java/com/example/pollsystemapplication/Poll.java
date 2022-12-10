@@ -1,19 +1,19 @@
 package com.example.pollsystemapplication;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Poll {
     String title;
     String creator;
     ArrayList<Question> questions;
-    LocalDateTime start;
-    LocalDateTime end;
+    Date start;
+    Date end;
 
     public Poll() {
     }
 
-    public Poll(String title, String creator, ArrayList<Question> questions, LocalDateTime start, LocalDateTime end) {
+    public Poll(String title, String creator, ArrayList<Question> questions, Date start, Date end) {
         this.title = title;
         this.creator = creator;
         this.questions = questions;
@@ -45,19 +45,19 @@ public class Poll {
         this.questions = questions;
     }
 
-    public LocalDateTime getStart() {
+    public Date getStart() {
         return start;
     }
 
-    public void setStart(LocalDateTime start) {
+    public void setStart(Date start) {
         this.start = start;
     }
 
-    public LocalDateTime getEnd() {
+    public Date getEnd() {
         return end;
     }
 
-    public void setEnd(LocalDateTime end) {
+    public void setEnd(Date end) {
         this.end = end;
     }
 }

@@ -24,7 +24,7 @@
             android:textColor="@android:color/white"
             android:textSize="24sp" />
 
-        <TextView
+        <!--<TextView
             android:id="@+id/start"
             android:layout_width="match_parent"
             android:layout_height="100dp"
@@ -46,7 +46,7 @@
             android:clickable="true"
             android:focusable="true"
             android:textColor="@android:color/white"
-            android:textSize="24sp" />
+            android:textSize="24sp" />-->
 
         <Button
             android:id="@+id/voteButton"

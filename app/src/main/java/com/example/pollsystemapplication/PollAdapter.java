@@ -51,15 +51,15 @@ public class PollAdapter extends RecyclerView.Adapter<PollAdapter.ViewHolder> {
 
         public TextView questionTitle;
         public Button voteButton;
-        public TextView start;
-        public TextView end;
+        //public TextView start;
+        //public TextView end;
 
         public ViewHolder(View itemView) {
             super(itemView);
             questionTitle = (TextView) itemView.findViewById(R.id.questionTitle);
             voteButton = (Button) itemView.findViewById(R.id.voteButton);
-            start = (TextView) itemView.findViewById(R.id.start);
-            end = (TextView) itemView.findViewById(R.id.end);
+            //start = (TextView) itemView.findViewById(R.id.start);
+            //end = (TextView) itemView.findViewById(R.id.end);
         }
     }
 }

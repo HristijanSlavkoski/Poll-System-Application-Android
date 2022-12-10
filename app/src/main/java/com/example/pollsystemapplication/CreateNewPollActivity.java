@@ -29,10 +29,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class CreateNewPollActivity extends AppCompatActivity {
 
@@ -124,10 +125,16 @@ public class CreateNewPollActivity extends AppCompatActivity {
                     if (endTime == null) {
                         throw new Exception("Please set end time");
                     }
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d-M-yyyy H:m");
-                    LocalDateTime start = LocalDateTime.parse(startDate + " " + startTime, formatter);
-                    LocalDateTime end = LocalDateTime.parse(endDate + " " + endTime, formatter);
-                    if (start.isAfter(end)) {
+                    Date start;
+                    Date end;
+                    SimpleDateFormat format = new SimpleDateFormat("d-M-yyyy h:m");
+                    try {
+                        start = format.parse(startDate + " " + startTime);
+                        end = format.parse(endDate + " " + endTime);
+                    } catch (ParseException e) {
+                        throw new Exception(e.getMessage());
+                    }
+                    if (start.after(end)) {
                         throw new Exception("Start time of the poll cannot be after end time");
                     }
                     ArrayList<Question> questions = new ArrayList<>();
