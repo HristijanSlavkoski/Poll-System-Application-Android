@@ -43,10 +43,11 @@ public class AdministratorHomePage extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
 
-        pollContainer = findViewById(R.id.pollContainer);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                pollContainer = findViewById(R.id.pollContainer);
+                pollContainer.removeAllViews();
                 for (DataSnapshot dataSnapshotPoll : snapshot.child("poll").getChildren()) {
                     Poll poll = dataSnapshotPoll.getValue(Poll.class);
                     if (poll.getCreator().equals(firebaseUser.getEmail())) {
