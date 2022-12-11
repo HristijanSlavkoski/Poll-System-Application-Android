@@ -19,6 +19,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 public class AdministratorHomePage extends AppCompatActivity {
 
     Button buttonCreateNewPoll, logoutButton;
@@ -42,11 +44,11 @@ public class AdministratorHomePage extends AppCompatActivity {
         databaseReference = firebaseDatabase.getReference();
 
         pollContainer = findViewById(R.id.pollContainer);
-        databaseReference.child("poll").addValueEventListener(new ValueEventListener() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Poll poll = dataSnapshot.getValue(Poll.class);
+                for (DataSnapshot dataSnapshotPoll : snapshot.child("poll").getChildren()) {
+                    Poll poll = dataSnapshotPoll.getValue(Poll.class);
                     if (poll.getCreator().equals(firebaseUser.getEmail())) {
                         View viewPoll = getLayoutInflater().inflate(R.layout.display_poll_card, null);
                         TextView namePoll = viewPoll.findViewById(R.id.poll);
@@ -57,7 +59,6 @@ public class AdministratorHomePage extends AppCompatActivity {
                             View viewQuestion = getLayoutInflater().inflate(R.layout.display_question_card_on_admin_page, null);
                             TextView nameQuestion = viewQuestion.findViewById(R.id.question);
                             nameQuestion.setText(poll.getQuestions().get(i).getQuestion());
-                            //RadioGroup radioGroup = viewQuestion.findViewById(R.id.radioGroup);
                             LinearLayout answerLayout = viewQuestion.findViewById(R.id.answerLayout);
                             final int numberOfAnswers = poll.getQuestions().get(i).getOptions().size();
                             for (int j = 0; j < numberOfAnswers; j++) {
@@ -65,13 +66,21 @@ public class AdministratorHomePage extends AppCompatActivity {
                                 TextView answerName = viewAnswer.findViewById(R.id.answerName);
                                 TextView numberOfVotes = viewAnswer.findViewById(R.id.numberOfVotes);
                                 answerName.setText(poll.getQuestions().get(i).getOptions().get(j));
-                                //TODO:
-                                //set numberOfVotes
-                                numberOfVotes.setText("nums");
+                                Integer votes = 0;
+                                for (DataSnapshot dataSnapshotVote : snapshot.child("vote").getChildren()) {
+                                    if (dataSnapshotVote.getKey().equals(dataSnapshotPoll.getKey())) {
+                                        for (DataSnapshot dataSnapshotUser : dataSnapshotVote.getChildren()) {
+                                            for(DataSnapshot dataSnapshotVoteObject : dataSnapshotUser.getChildren()){
+                                                ArrayList<String> answers = (ArrayList<String>) dataSnapshotVoteObject.child("answers").getValue();
+                                                if(answers.contains(answerName.getText())){
+                                                    votes++;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                numberOfVotes.setText((votes.toString()));
                                 answerLayout.addView(viewAnswer);
-                                /*RadioButton radioButton = new RadioButton(AdministratorHomePage.this);
-                                radioButton.setText(poll.getQuestions().get(i).getOptions().get(j));
-                                radioGroup.addView(radioButton);*/
                             }
                             questionContainer.addView(viewQuestion);
                         }
