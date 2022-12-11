@@ -61,7 +61,7 @@ public class VoterHomePage extends AppCompatActivity {
                     values.add(dataSnapshot.getValue(Poll.class));
                     keys.add(dataSnapshot.getKey());
                 }
-                pollAdapter = new PollAdapter(keys, values, R.layout.list_all_active_polls, VoterHomePage.this);
+                pollAdapter = new PollAdapter(keys, values, R.layout.list_all_active_polls_card, VoterHomePage.this);
                 mRecyclerView.setAdapter(pollAdapter);
             }
 

@@ -36,6 +36,7 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class VotingPage extends AppCompatActivity {
+    public static final int REQUEST_LOCATION_PERMISSION = 1;
     long timeLeftInMillis;
     TextView timerTextView, pollTitleText;
     CountDownTimer countDownTimer;
@@ -47,7 +48,6 @@ public class VotingPage extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     LocationManager locationManager;
-    public static final int REQUEST_LOCATION_PERMISSION = 1;
     long MIN_TIME_INTERVAL = 1000; // 1 second
     float MIN_DISTANCE = 100; // 100 meters
 
@@ -112,7 +112,7 @@ public class VotingPage extends AppCompatActivity {
         questionContainer = findViewById(R.id.questionContainer);
         final int numberOfQuestions = poll.getQuestions().size();
         for (int i = 0; i < numberOfQuestions; i++) {
-            View viewQuestion = getLayoutInflater().inflate(R.layout.display_question_card, null);
+            View viewQuestion = getLayoutInflater().inflate(R.layout.display_question_card_on_voting_page, null);
             TextView nameQuestion = viewQuestion.findViewById(R.id.question);
             RadioGroup radioGroup = viewQuestion.findViewById(R.id.radioGroup);
             nameQuestion.setText(poll.getQuestions().get(i).getQuestion());
