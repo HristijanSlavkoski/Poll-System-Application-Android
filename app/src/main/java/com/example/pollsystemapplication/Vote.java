@@ -1,7 +1,5 @@
 package com.example.pollsystemapplication;
 
-import android.location.Location;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,12 +7,12 @@ import java.util.Date;
 public class Vote implements Serializable {
     ArrayList<String> answers;
     Date time;
-    Location location;
+    CustomLocation location;
 
     public Vote() {
     }
 
-    public Vote(ArrayList<String> answers, Date time, Location location) {
+    public Vote(ArrayList<String> answers, Date time, CustomLocation location) {
         this.answers = answers;
         this.time = time;
         this.location = location;
@@ -36,11 +34,11 @@ public class Vote implements Serializable {
         this.time = time;
     }
 
-    public Location getLocation() {
+    public CustomLocation getLocation() {
         return location;
     }
 
-    public void setLocation(Location location) {
+    public void setLocation(CustomLocation location) {
         this.location = location;
     }
 }

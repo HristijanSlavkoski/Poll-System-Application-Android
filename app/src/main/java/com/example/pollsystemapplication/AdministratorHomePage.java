@@ -52,6 +52,16 @@ public class AdministratorHomePage extends AppCompatActivity {
                     Poll poll = dataSnapshotPoll.getValue(Poll.class);
                     if (poll.getCreator().equals(firebaseUser.getEmail())) {
                         View viewPoll = getLayoutInflater().inflate(R.layout.display_poll_card, null);
+                        Button pollInfo = viewPoll.findViewById(R.id.pollInfo);
+                        pollInfo.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(v.getContext(), MapPage.class);
+                                intent.putExtra("pollId", dataSnapshotPoll.getKey());
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                v.getContext().startActivity(intent);
+                            }
+                        });
                         TextView namePoll = viewPoll.findViewById(R.id.poll);
                         namePoll.setText(poll.getTitle());
                         LinearLayout questionContainer = viewPoll.findViewById(R.id.questionContainer);
@@ -71,11 +81,9 @@ public class AdministratorHomePage extends AppCompatActivity {
                                 for (DataSnapshot dataSnapshotVote : snapshot.child("vote").getChildren()) {
                                     if (dataSnapshotVote.getKey().equals(dataSnapshotPoll.getKey())) {
                                         for (DataSnapshot dataSnapshotUser : dataSnapshotVote.getChildren()) {
-                                            for(DataSnapshot dataSnapshotVoteObject : dataSnapshotUser.getChildren()){
-                                                ArrayList<String> answers = (ArrayList<String>) dataSnapshotVoteObject.child("answers").getValue();
-                                                if(answers.contains(answerName.getText())){
-                                                    votes++;
-                                                }
+                                            ArrayList<String> answers = (ArrayList<String>) dataSnapshotUser.child("answers").getValue();
+                                            if (answers.contains(answerName.getText())) {
+                                                votes++;
                                             }
                                         }
                                     }

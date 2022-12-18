@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Poll System Application</string>
+    <string name="title_activity_map_page">MapPage</string>
 </resources>

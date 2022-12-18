@@ -258,7 +258,7 @@ public class CreateNewPollActivity extends AppCompatActivity {
             public void onTimeSet(TimePicker timePicker, int i, int i1) {
                 endTime = i + ":" + i1;
                 setEndTime.setText(endTime);
-                endCalendar.set(startCalendar.get(Calendar.YEAR), startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.DAY_OF_MONTH), i, i1);
+                endCalendar.set(endCalendar.get(Calendar.YEAR), endCalendar.get(Calendar.MONTH), endCalendar.get(Calendar.DAY_OF_MONTH), i, i1);
             }
         }, startHour, startMinute, true);
 

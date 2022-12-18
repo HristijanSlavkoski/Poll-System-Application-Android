@@ -61,7 +61,6 @@ public class VotingPage extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
         progressDialog = new ProgressDialog(this);
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         Bundle extras = getIntent().getExtras();
         Poll poll = (Poll) extras.getSerializable("poll");
         String pollId = extras.getString("pollId");
@@ -155,12 +154,12 @@ public class VotingPage extends AppCompatActivity {
                         String selectedRadioButtonText = selectedRadioButton.getText().toString();
                         answers.add(selectedRadioButtonText);
                     }
-                    Location location = null;
+                    Location currentLocation = null;
+                    locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
                     // Check if the app has permission to access the device's location
-                    if (ActivityCompat.checkSelfPermission((Activity) v.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission((Activity) v.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission((Activity) v.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         // If the app doesn't have permission, request permission
-                        ActivityCompat.requestPermissions((Activity) v.getContext(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+                        ActivityCompat.requestPermissions((Activity) v.getContext(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
                     } else {
                         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                             // If the location provider is not enabled, prompt the user to enable it
@@ -168,15 +167,24 @@ public class VotingPage extends AppCompatActivity {
                             startActivity(enableLocationIntent);
                         }
                         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_INTERVAL, MIN_DISTANCE, locationListener);
-                        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        if (currentLocation == null) {
+                            currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                        }
+                        if (currentLocation == null) {
+                            currentLocation = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+                        }
                     }
-                    if (location == null) {
+                    if (currentLocation == null) {
                         throw new Exception("Please allow location so we can submit your vote");
                     }
+                    CustomLocation location = new CustomLocation();
+                    location.setLongitude(currentLocation.getLongitude());
+                    location.setLatitude(currentLocation.getLatitude());
                     Date now = new Date();
                     Vote vote = new Vote(answers, now, location);
 
-                    databaseReference.child("vote").child(pollId).child(firebaseUser.getUid()).push().setValue(vote).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    databaseReference.child("vote").child(pollId).child(firebaseUser.getUid()).setValue(vote).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
