@@ -17,7 +17,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PollSystemApplication"
         tools:targetApi="31">
-
+        <activity
+            android:name=".VoterResults"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -29,10 +35,10 @@
              project's local.properties file (e.g. MAPS_API_KEY=Aiza...), and replace the
              "YOUR_API_KEY" string in this file with "${MAPS_API_KEY}".
         -->
-
-        <service android:name=".MyFirebaseMessagingService"
-            android:exported="false"
-            android:enabled="true">
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:enabled="true"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -59,6 +65,10 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
+        </activity>
+        <activity
+            android:name=".CheckMyVotesPage"
+            android:exported="false">
         </activity>
         <activity
             android:name=".AdministratorHomePage"

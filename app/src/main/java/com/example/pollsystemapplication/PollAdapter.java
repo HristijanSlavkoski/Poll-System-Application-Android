@@ -71,10 +71,10 @@ public class PollAdapter extends RecyclerView.Adapter<PollAdapter.ViewHolder> {
             viewHolder.voteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO:
-                    //Da me nosit na resultati
-                    Intent intent = new Intent(v.getContext(), AdministratorHomePage.class);
+                    Intent intent = new Intent(v.getContext(), VoterResults.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("pollId", key);
+                    intent.putExtra("poll", entry);
                     v.getContext().startActivity(intent);
                 }
             });
