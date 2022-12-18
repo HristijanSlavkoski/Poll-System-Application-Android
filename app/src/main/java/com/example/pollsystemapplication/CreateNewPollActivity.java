@@ -1,12 +1,18 @@
 package com.example.pollsystemapplication;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import android.app.DatePickerDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -29,9 +35,18 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Scanner;
 
 public class CreateNewPollActivity extends AppCompatActivity {
 
@@ -181,6 +196,7 @@ public class CreateNewPollActivity extends AppCompatActivity {
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                                 Toast.makeText(CreateNewPollActivity.this, "New poll created successfully", Toast.LENGTH_SHORT).show();
+                                sendNotification();
                             } else {
                                 progressDialog.dismiss();
                                 Toast.makeText(CreateNewPollActivity.this, "" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -193,6 +209,25 @@ public class CreateNewPollActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void sendNotification() {
+        // Create a new message
+        JSONObject message = new JSONObject();
+        try {
+            message.put("to", "/topics/all");
+            message.put("data", new JSONObject().put("message", "New poll is created. It will be opened on " + startDate + " at " + startTime));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        new SendMessageTask().execute(message);
+    }
+
+    private String convertStreamToString(InputStream inputStream) {
+        // This method reads the response from the server and converts it to a string
+        // You can customize this method to handle the response in any way you want
+        Scanner scanner = new Scanner(inputStream).useDelimiter("\\A");
+        return scanner.hasNext() ? scanner.next() : "";
     }
 
     private void setStartDate() {
@@ -350,5 +385,42 @@ public class CreateNewPollActivity extends AppCompatActivity {
             }
         });
         answerContainer.addView(view);
+    }
+
+    private class SendMessageTask extends AsyncTask<JSONObject, Void, String> {
+        @Override
+        protected String doInBackground(JSONObject... params) {
+            try {
+                // Send the message to the server
+                URL url = new URL("https://fcm.googleapis.com/fcm/send");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setRequestProperty("Authorization", "key=AAAAH6PmPSQ:APA91bGW77GwR9JpcrSY215UgV3LAOe1lIX2iMobTrF0doAP6fjFDfeGRp6jXiytGrr73lUPIWgCmHUddd3JXmKYD9jzDhLy1REoanU50cTs5Fab5t4YCMudgEVzapD6yF_16PelSd9G");
+                connection.setDoOutput(true);
+
+                // Write the message to the request body
+                OutputStream outputStream = connection.getOutputStream();
+                outputStream.write(params[0].toString().getBytes());
+                outputStream.flush();
+                outputStream.close();
+
+                // Read the response from the server
+                InputStream inputStream = connection.getInputStream();
+                String response = convertStreamToString(inputStream);
+                inputStream.close();
+
+                return response;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            // Handle the response from the server
+            Log.d(TAG, "Response: " + response);
+        }
     }
 }
